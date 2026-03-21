@@ -13,8 +13,6 @@ services:
       OWNER_PASSWORD: '1TO1netz'
       SESSION_SECRET: 'dev-secret-change-me'
       PHOTO_DIR: '/data/photos'
-      # 同一オリジン運用ならCORSは不要（残すなら空でもOK）
-      # CORS_ORIGIN: ''
     command: sh -c "npm install && npm run dev"
     ports:
       - '5499:3000'

@@ -18,14 +18,15 @@ const SESSION_SECRET = process.env.SESSION_SECRET || 'dev';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ここで ../public を配信（docker-compose で ./public を /app/public にマウントする想定）
-const PUBLIC_DIR = path.join(__dirname, '../public');
+const PUBLIC_DIR = '/app/public';
 app.use(express.static(PUBLIC_DIR));
 
 // ルートは index.html を返す（staticだけでも大抵動くが、明示しておく）
 app.get('/', (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });
+
+app.get('/health', (req, res) => res.json({ ok: true }));
 
 function sign(payloadObj) {
   const raw = JSON.stringify(payloadObj);
