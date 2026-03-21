@@ -3,7 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>教室マスタ（モック）</title>
+    <title>１対１ネッツ講師紹介｜教室マスタ</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="/assets/style.css" />
   </head>
   <body>
@@ -14,13 +22,99 @@
           <strong>オーナー：教室マスタ</strong>
         </div>
         <div class="right">
-          <span class="badge">追加・編集を想定</span>
+          <div class="icon-row" aria-label="mood icons">
+            <svg class="icon" viewBox="0 0 24 24" role="img" aria-label="cloud">
+              <path
+                d="M7.5 18.5h9.3a4.2 4.2 0 0 0 .4-8.4A5.6 5.6 0 0 0 6.5 9.7a3.9 3.9 0 0 0 1 8.8Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <svg class="icon" viewBox="0 0 24 24" role="img" aria-label="rain">
+              <path
+                d="M7.5 16.2h9.3a4.2 4.2 0 0 0 .4-8.4A5.6 5.6 0 0 0 6.5 7.4a3.9 3.9 0 0 0 1 8.8Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9 19.2l-1 2M12 19.2l-1 2M15 19.2l-1 2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+            <svg class="icon" viewBox="0 0 24 24" role="img" aria-label="book">
+              <path
+                d="M5.5 6.5c2.6-1.3 5.4-1.3 8 0v13c-2.6-1.3-5.4-1.3-8 0v-13Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M18.5 6.5c-2.6-1.3-5.4-1.3-8 0"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+              <path
+                d="M18.5 6.5v13c-2.6-1.3-5.4-1.3-8 0"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <svg class="icon" viewBox="0 0 24 24" role="img" aria-label="game">
+              <path
+                d="M7.5 15.5h-2a3 3 0 0 1-2.9-3.7l.7-3.2A3 3 0 0 1 6.2 6.5h11.6a3 3 0 0 1 2.9 2.1l.7 3.2a3 3 0 0 1-2.9 3.7h-2l-2.2 2.2a1 1 0 0 1-1.4 0l-1-1-1 1a1 1 0 0 1-1.4 0L7.5 15.5Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M8 10.5h3M9.5 9v3"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+              <path
+                d="M16.6 10.2h.01M18 11.8h.01"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+          <span class="badge">追加・編集の導線</span>
         </div>
       </div>
 
       <div class="grid two">
         <div class="card">
-          <h1>教室を追加</h1>
+          <h1>
+            <span class="hicon" aria-hidden="true"
+              ><svg class="icon icon-inline" viewBox="0 0 24 24">
+                <path
+                  d="M12 5v14M5 12h14"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                /></svg></span
+            >教室を追加
+          </h1>
           <small>実装時：POST /owner/schools</small>
           <div class="hr"></div>
 
@@ -36,7 +130,18 @@
         </div>
 
         <div class="card">
-          <h1>教室一覧</h1>
+          <h1>
+            <span class="hicon" aria-hidden="true"
+              ><svg class="icon icon-inline" viewBox="0 0 24 24">
+                <path
+                  d="M7 7.5h10M7 12h10M7 16.5h10"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                /></svg></span
+            >教室一覧
+          </h1>
           <table class="table">
             <thead>
               <tr>
@@ -68,7 +173,7 @@
           </table>
           <div class="hr"></div>
           <small
-            >※実装時：教室に紐づく講師がいる場合、削除可否のルールを決める。</small
+            >※実装時：教室に紐づく講師がいる場合、削除可否ルールが必要。</small
           >
         </div>
       </div>

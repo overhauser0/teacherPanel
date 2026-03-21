@@ -1,21 +1,30 @@
 :root {
-  --bg: #0b0f17;
-  --panel: #111827;
-  --panel2: #0f172a;
-  --text: #e5e7eb;
-  --muted: #9ca3af;
-  --line: #243244;
-  --brand: #60a5fa;
-  --danger: #f87171;
-  --ok: #34d399;
+  /* Reference vibe: beige paper + bold typography + tiny playful UI */
+  --paper: #eadac7;
+  --paper2: #f2e7da;
+  --ink: #2b2b2b;
+  --muted: rgba(43, 43, 43, 0.7);
+  --line: rgba(43, 43, 43, 0.12);
+
+  --card: rgba(242, 231, 218, 0.65);
+  --shadow: none;
+  --radius: 18px;
+
+  --brand: #2b2b2b; /* almost monochrome */
+  --accent: #111111;
+  --ok: #2f855a;
+  --danger: #c53030;
 }
 
 * {
   box-sizing: border-box;
 }
+
 body {
   margin: 0;
   font-family:
+    'Zen Maru Gothic',
+    ui-rounded,
     ui-sans-serif,
     system-ui,
     -apple-system,
@@ -23,8 +32,19 @@ body {
     Roboto,
     Helvetica,
     Arial;
-  background: linear-gradient(180deg, var(--bg), #05070b);
-  color: var(--text);
+  color: var(--ink);
+  background:
+    radial-gradient(
+      900px 480px at 20% 15%,
+      rgba(255, 255, 255, 0.45),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 520px at 85% 30%,
+      rgba(0, 0, 0, 0.06),
+      transparent 60%
+    ),
+    linear-gradient(180deg, var(--paper), var(--paper2));
 }
 
 a {
@@ -36,9 +56,9 @@ a:hover {
 }
 
 .container {
-  max-width: 1040px;
+  max-width: 980px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 26px;
 }
 
 .nav {
@@ -47,10 +67,11 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   border: 1px solid var(--line);
-  background: rgba(17, 24, 39, 0.7);
-  backdrop-filter: blur(8px);
-  border-radius: 14px;
+  background: rgba(242, 231, 218, 0.65);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius);
   padding: 14px 16px;
+  box-shadow: none;
 }
 
 .nav .left,
@@ -59,12 +80,14 @@ a:hover {
   gap: 12px;
   align-items: center;
 }
+
 .badge {
   font-size: 12px;
-  padding: 4px 8px;
+  padding: 6px 10px;
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--muted);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .grid {
@@ -82,20 +105,18 @@ a:hover {
 
 .card {
   border: 1px solid var(--line);
-  background: rgba(17, 24, 39, 0.8);
-  border-radius: 14px;
+  background: var(--card);
+  border-radius: var(--radius);
   padding: 18px;
+  box-shadow: none;
 }
 
 h1 {
   font-size: 22px;
   margin: 0 0 12px;
+  letter-spacing: -0.04em;
 }
-h2 {
-  font-size: 16px;
-  margin: 0 0 10px;
-  color: #cbd5e1;
-}
+
 small {
   color: var(--muted);
 }
@@ -109,23 +130,55 @@ small {
 
 label {
   display: block;
-  font-size: 13px;
-  color: #cbd5e1;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--muted);
   margin: 0 0 6px;
 }
+
 input,
 select,
 textarea {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 11px 12px;
+  border-radius: 14px;
   border: 1px solid var(--line);
-  background: var(--panel2);
-  color: var(--text);
+  background: rgba(255, 255, 255, 0.4);
+  color: var(--ink);
+  outline: none;
 }
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(43, 43, 43, 0.45);
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.08);
+}
+
 textarea {
   min-height: 110px;
   resize: vertical;
+}
+
+.icon-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-right: 4px;
+}
+.icon {
+  width: 18px;
+  height: 18px;
+  color: rgba(43, 43, 43, 0.85);
+}
+.icon-inline {
+  width: 18px;
+  height: 18px;
+}
+.hicon {
+  display: inline-flex;
+  vertical-align: -3px;
+  margin-right: 8px;
 }
 
 .form-grid {
@@ -133,6 +186,7 @@ textarea {
   grid-template-columns: 1fr;
   gap: 12px;
 }
+
 @media (min-width: 720px) {
   .form-grid.two {
     grid-template-columns: 1fr 1fr;
@@ -144,33 +198,42 @@ textarea {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: #0b1220;
-  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(43, 43, 43, 0.22);
+  background: rgba(255, 255, 255, 0.4);
+  color: var(--ink);
   cursor: pointer;
+  box-shadow: none;
 }
+
 .btn.primary {
-  background: rgba(96, 165, 250, 0.15);
-  border-color: rgba(96, 165, 250, 0.35);
+  color: #fff;
+  border-color: rgba(0, 0, 0, 0.35);
+  background: linear-gradient(180deg, #2b2b2b, #111);
 }
+
 .btn.danger {
-  background: rgba(248, 113, 113, 0.12);
-  border-color: rgba(248, 113, 113, 0.35);
+  color: #fff;
+  border-color: rgba(0, 0, 0, 0.2);
+  background: linear-gradient(180deg, #d64545, #a51717);
 }
+
 .btn.ok {
-  background: rgba(52, 211, 153, 0.12);
-  border-color: rgba(52, 211, 153, 0.35);
+  color: #fff;
+  border-color: rgba(0, 0, 0, 0.2);
+  background: linear-gradient(180deg, #2f855a, #1f6f49);
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.35);
 }
+
 .table th,
 .table td {
   padding: 10px 12px;
@@ -178,13 +241,12 @@ textarea {
   text-align: left;
   vertical-align: top;
 }
+
 .table th {
-  color: #cbd5e1;
-  font-size: 13px;
-  background: rgba(15, 23, 42, 0.6);
-}
-.table td {
-  color: var(--text);
+  color: var(--ink);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .hr {
@@ -198,13 +260,16 @@ textarea {
   width: 210mm;
   min-height: 297mm;
   background: white;
-  color: #111827;
-  border-radius: 10px;
+  color: #111;
+  border-radius: 14px;
   padding: 16mm;
+  border: 1px dashed rgba(0, 0, 0, 0.22);
 }
+
 .a4 h1 {
   font-size: 20px;
   margin: 0 0 8px;
+  letter-spacing: -0.03em;
 }
 .a4 .muted {
   color: #6b7280;
@@ -218,11 +283,13 @@ textarea {
   padding: 6px 0;
   border-bottom: 1px solid #e5e7eb;
 }
+
 .a4 .photo {
   width: 38mm;
   height: 48mm;
-  background: #e5e7eb;
-  border-radius: 6px;
+  background: #eee;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -245,10 +312,12 @@ textarea {
   .card {
     border: none;
     background: transparent;
+    box-shadow: none;
     padding: 0;
   }
   .a4 {
     border-radius: 0;
+    border: none;
     padding: 12mm;
   }
 }
