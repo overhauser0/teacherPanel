@@ -216,7 +216,9 @@
             </div>
 
             <div class="row" style="grid-column: 1 / -1">
-              <button class="btn primary" type="button">保存（未実装）</button>
+              <button class="btn primary" id="saveBtn" type="button">
+                保存
+              </button>
               <a class="btn" href="/">戻る</a>
             </div>
           </form>
@@ -231,10 +233,8 @@
     </div>
   </body>
   <script>
-    const API = 'http://localhost:5500';
-
     async function loadSchools() {
-      const r = await fetch(`${API}/schools`, { credentials: 'include' });
+      const r = await fetch('/schools', { credentials: 'include' });
       if (!r.ok) return;
       const schools = await r.json();
 
@@ -251,7 +251,7 @@
     }
 
     async function loadMe() {
-      const r = await fetch(`${API}/me`, { credentials: 'include' });
+      const r = await fetch('me', { credentials: 'include' });
       if (!r.ok) return;
       const me = await r.json();
 
@@ -277,7 +277,7 @@
         comment: document.querySelector('textarea[name="comment"]').value,
       };
 
-      const r = await fetch(`${API}/me`, {
+      const r = await fetch('me', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

@@ -153,8 +153,6 @@
     </div>
 
     <script>
-      const API = 'http://localhost:5500';
-
       document
         .getElementById('loginForm')
         .addEventListener('submit', async (e) => {
@@ -162,7 +160,7 @@
           const id = document.getElementById('loginId').value.trim();
           const pw = document.getElementById('loginPw').value;
 
-          const r = await fetch(`${API}/auth/login`, {
+          const r = await fetch('/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
