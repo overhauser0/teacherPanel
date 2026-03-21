@@ -1,18 +1,10 @@
 services:
-  app:
-    image: nginx:alpine
-    ports:
-      - '5499:80'
-    volumes:
-      - ./public:/usr/share/nginx/html:ro
-    depends_on:
-      - api
-
   api:
     image: node:20-alpine
     working_dir: /app
     volumes:
       - ./api:/app
+      - ./public:/app/public:ro
       - photos:/data/photos
     environment:
       PORT: '3000'
@@ -21,10 +13,11 @@ services:
       OWNER_PASSWORD: '1TO1netz'
       SESSION_SECRET: 'dev-secret-change-me'
       PHOTO_DIR: '/data/photos'
-      CORS_ORIGIN: 'https://teacherpanel.overhauser0.synology.me'
+      # 同一オリジン運用ならCORSは不要（残すなら空でもOK）
+      # CORS_ORIGIN: ''
     command: sh -c "npm install && npm run dev"
     ports:
-      - '5500:3000'
+      - '5499:3000'
     depends_on:
       - db
 

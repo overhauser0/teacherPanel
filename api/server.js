@@ -1,25 +1,31 @@
 import express from 'express';
-import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { pool } from './db.js';
 
 const app = express();
 
-app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true,
-  }),
-);
 app.use(express.json());
 app.use(cookieParser());
 
 const PORT = Number(process.env.PORT || 3000);
 const SESSION_SECRET = process.env.SESSION_SECRET || 'dev';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ここで ../public を配信（docker-compose で ./public を /app/public にマウントする想定）
+const PUBLIC_DIR = path.join(__dirname, '../public');
+app.use(express.static(PUBLIC_DIR));
+
+// ルートは index.html を返す（staticだけでも大抵動くが、明示しておく）
+app.get('/', (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
+});
 
 function sign(payloadObj) {
   const raw = JSON.stringify(payloadObj);
@@ -60,6 +66,11 @@ function requireTeacher(req, res, next) {
   next();
 }
 
+/* --- health (確認用) --- */
+app.get('/health', (req, res) => {
+  res.json({ ok: true });
+});
+
 /* --- auth --- */
 app.post('/auth/login', async (req, res) => {
   const { id, password } = req.body;
@@ -75,24 +86,51 @@ app.post('/auth/login', async (req, res) => {
 
   // teacher (teacher_code)
   const teacher_code = String(id || '').trim();
+  const pw = String(password || '');
+
   const client = await pool.connect();
   try {
     const r = await client.query(
       `SELECT id, teacher_code, password_hash FROM teachers WHERE teacher_code = $1`,
       [teacher_code],
     );
-    if (r.rowCount === 0)
-      return res.status(401).json({ error: 'invalid_credentials' });
 
+    // 案2：未登録なら新規作成してログイン
+    if (r.rowCount === 0) {
+      const password_hash = await bcrypt.hash(pw, 10);
+      const created = await client.query(
+        `INSERT INTO teachers(teacher_code, name, prefecture, subjects, comment, school_id, password_hash)
+         VALUES($1,'','', '', '', NULL, $2)
+         RETURNING id`,
+        [teacher_code, password_hash],
+      );
+
+      const teacherId = created.rows[0].id;
+      res.cookie('session', sign({ role: 'teacher', teacher_id: teacherId }), {
+        httpOnly: true,
+        sameSite: 'lax',
+      });
+      return res.json({
+        role: 'teacher',
+        redirect: '/me/edit.html',
+        created: true,
+      });
+    }
+
+    // 既存：PW照合
     const t = r.rows[0];
-    const ok = await bcrypt.compare(String(password || ''), t.password_hash);
+    const ok = await bcrypt.compare(pw, t.password_hash);
     if (!ok) return res.status(401).json({ error: 'invalid_credentials' });
 
     res.cookie('session', sign({ role: 'teacher', teacher_id: t.id }), {
       httpOnly: true,
       sameSite: 'lax',
     });
-    return res.json({ role: 'teacher', redirect: '/me/edit.html' });
+    return res.json({
+      role: 'teacher',
+      redirect: '/me/edit.html',
+      created: false,
+    });
   } finally {
     client.release();
   }
