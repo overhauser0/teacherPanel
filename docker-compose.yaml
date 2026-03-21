@@ -1,0 +1,21 @@
+services:
+  app:
+    image: nginx:alpine
+    ports:
+      - '5499:80'
+    volumes:
+      - ./public:/usr/share/nginx/html:ro
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: teacher_db
+      POSTGRES_USER: teacher_user
+      POSTGRES_PASSWORD: teacher_pass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+volumes:
+  pgdata:

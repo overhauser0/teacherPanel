@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>講師紹介マネージャー（モック）</title>
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav">
+        <div class="left">
+          <strong>講師紹介マネージャー</strong>
+          <span class="badge">Mock</span>
+        </div>
+        <div class="right">
+          <a href="/view/">講師：ID/PWで閲覧・編集</a>
+          <a href="/owner/login.html">オーナー</a>
+        </div>
+      </div>
+
+      <div class="grid two">
+        <div class="card">
+          <h1>講師側</h1>
+          <small>ID（6桁）とパスワードで本人のみ閲覧・編集。</small>
+          <div class="hr"></div>
+          <div class="row">
+            <a class="btn primary" href="/view/">ID/PW入力へ</a>
+            <a class="btn" href="/me/">（サンプル）プロフィール表示</a>
+            <a class="btn" href="/me/edit.html">（サンプル）編集</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h1>オーナー側</h1>
+          <small>全データの参照・編集、教室マスタ管理、A4出力。</small>
+          <div class="hr"></div>
+          <div class="row">
+            <a class="btn primary" href="/owner/login.html">ログイン</a>
+            <a class="btn" href="/owner/teachers.html">（サンプル）講師一覧</a>
+            <a class="btn" href="/owner/schools.html">（サンプル）教室一覧</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

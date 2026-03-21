@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>教室マスタ（モック）</title>
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav">
+        <div class="left">
+          <a href="/owner/teachers.html">← 講師一覧へ</a>
+          <strong>オーナー：教室マスタ</strong>
+        </div>
+        <div class="right">
+          <span class="badge">追加・編集を想定</span>
+        </div>
+      </div>
+
+      <div class="grid two">
+        <div class="card">
+          <h1>教室を追加</h1>
+          <small>実装時：POST /owner/schools</small>
+          <div class="hr"></div>
+
+          <form action="#" method="post" class="form-grid">
+            <div>
+              <label>教室名</label>
+              <input placeholder="例：広島本部校" />
+            </div>
+            <div class="row">
+              <button class="btn primary" type="button">追加（未実装）</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h1>教室一覧</h1>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>教室名</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>広島本部校</td>
+                <td>
+                  <a href="/owner/school.html">編集</a>
+                  <span class="muted"> / </span>
+                  <a href="#" onclick="alert('削除は未実装')">削除</a>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>横川校</td>
+                <td>
+                  <a href="/owner/school.html">編集</a>
+                  <span class="muted"> / </span>
+                  <a href="#" onclick="alert('削除は未実装')">削除</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="hr"></div>
+          <small
+            >※実装時：教室に紐づく講師がいる場合、削除可否のルールを決める。</small
+          >
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

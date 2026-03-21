@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>プロフィール編集（モック）</title>
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav">
+        <div class="left">
+          <a href="/me/">← 戻る</a>
+          <strong>プロフィール編集</strong>
+        </div>
+        <div class="right">
+          <span class="badge">保存は未実装</span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h1>編集フォーム</h1>
+          <small>後で `POST /me/edit` に差し替える想定のモック。</small>
+          <div class="hr"></div>
+
+          <form action="/me/" method="get" class="form-grid two">
+            <div>
+              <label>氏名</label>
+              <input name="name" value="山田 太郎" />
+            </div>
+            <div>
+              <label>出身県</label>
+              <select name="prefecture">
+                <option>広島県</option>
+                <option>岡山県</option>
+                <option>山口県</option>
+                <option>島根県</option>
+              </select>
+            </div>
+
+            <div>
+              <label>教室名（選択式）</label>
+              <select name="school">
+                <option>広島本部校</option>
+                <option>横川校</option>
+                <option>五日市校</option>
+              </select>
+            </div>
+
+            <div>
+              <label>得意科目（カンマ区切りの暫定）</label>
+              <input name="subjects" value="数学, 英語" />
+            </div>
+
+            <div style="grid-column: 1 / -1">
+              <label>コメント</label>
+              <textarea name="comment">
+生徒が「できた」を積み上げられるように、毎回の授業で小さな達成を作ります。</textarea
+              >
+            </div>
+
+            <div style="grid-column: 1 / -1">
+              <label>写真（アップロード）</label>
+              <input type="file" name="photo" accept="image/*" />
+              <small>※実装時：Docker volume（/data/photos）に保存。</small>
+            </div>
+
+            <div class="row" style="grid-column: 1 / -1">
+              <button class="btn primary" type="submit">保存（モック）</button>
+              <a class="btn" href="/me/">キャンセル</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
