@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-6 pb-12">
+    <div class="flex items-center gap-4 mb-8">
+        <a href="{{ url_for('admin') if session.role == 'admin' else '/' }}" class="p-2 bg-white rounded-full shadow-sm text-[#8B7E6D]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </a>
+        <h1 class="text-xl font-bold">プロフィール編集</h1>
+    </div>
+
+    <script>
+        function previewImage(input) {
+            const file = input.files[0];
+            const previewArea = document.getElementById('preview-area');
+            const previewImage = document.getElementById('preview-image');
+            const placeholder = document.getElementById('preview-placeholder');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewArea.classList.remove('hidden');
+                    if(placeholder) placeholder.classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+
+    <form action="{{ '/edit/' + teacher.uuid }}" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-[2rem] shadow-sm space-y-6 border border-[#EDE4D8]">
+        
+        <div class="flex justify-center mb-6">
+            <div class="w-32 h-32 rounded-3xl overflow-hidden bg-gray-100 border-4 border-[#F3F0EC] shadow-inner relative flex items-center justify-center">
+                {% if teacher.image_filename %}
+                    <img id="preview-image" src="{{ url_for('static', filename='uploads/' + teacher.image_filename) }}" class="w-full h-full object-cover">
+                {% else %}
+                    <div id="preview-placeholder" class="text-center text-gray-300 italic">No Photo</div>
+                    <img id="preview-image" src="" class="w-full h-full object-cover hidden">
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-bold mb-2 ml-1 text-gray-400">指定ID (修正不可)</label>
+                <input type="text" name="id" value="{{ teacher.display_id }}" class="input-field text-gray-400 font-mono" readonly>
+            </div>
+            <div>
+                <label class="block text-xs font-bold mb-2 ml-1">パスワード</label>
+                <input type="password" name="password" value="{{ teacher.password }}" class="input-field" required>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold mb-3 ml-1">性別</label>
+            <div class="flex gap-4">
+                <label class="flex-1">
+                    <input type="radio" name="gender" value="male" class="sr-only peer" {{ 'checked' if teacher.gender == 'male' }}>
+                    <div class="text-center py-3 rounded-xl border-2 border-gray-100 peer-checked:border-blue-400 peer-checked:bg-blue-50 transition cursor-pointer">男性</div>
+                </label>
+                <label class="flex-1">
+                    <input type="radio" name="gender" value="female" class="sr-only peer" {{ 'checked' if teacher.gender == 'female' }}>
+                    <div class="text-center py-3 rounded-xl border-2 border-gray-100 peer-checked:border-rose-400 peer-checked:bg-rose-50 transition cursor-pointer">女性</div>
+                </label>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold mb-2 ml-1">氏名</label>
+            <input type="text" name="name" value="{{ teacher.name }}" class="input-field" placeholder="山田 太郎" required>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold mb-2 ml-1">教室</label>
+            <select name="classroom" class="input-field appearance-none bg-transparent">
+                {% for c in classrooms %}
+                <option value="{{ c }}" {{ 'selected' if teacher.classroom == c }}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-bold mb-2 ml-1">出身県</label>
+                <input type="text" name="hometown" value="{{ teacher.hometown }}" class="input-field" placeholder="広島県">
+            </div>
+            <div>
+                <label class="block text-xs font-bold mb-2 ml-1">得意科目</label>
+                <input type="text" name="subject" value="{{ teacher.subject }}" class="input-field" placeholder="数学・理科">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold mb-2 ml-1">プロフィール写真（変更する場合）</label>
+            <input type="file" name="image" onchange="previewImage(this)" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-[#EDE4D8] file:text-[#5D5245] hover:file:bg-[#E2D6C5]">
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold mb-2 ml-1">ひと言 (最大200文字)</label>
+            <textarea name="comment" rows="5" maxlength="200" class="input-field">{{ teacher.comment }}</textarea>
+        </div>
+
+        <button type="submit" class="w-full btn-primary shadow-lg mt-4">内容を保存する</button>
+    </form>
+</div>
+{% endblock %}

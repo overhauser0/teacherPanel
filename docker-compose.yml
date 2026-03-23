@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  teacher-card-app:
+    build: .
+    container_name: teacher-panel
+    volumes:
+      - ./app:/app
+    ports:
+      - '5499:5000'
+    environment:
+      - TZ=Asia/Tokyo
+      - ADMIN_ID=owner
+      - ADMIN_PW=1TO1netz
+    restart: always

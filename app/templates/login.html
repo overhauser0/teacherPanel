@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% block content %}
+<div class="flex-grow flex flex-col justify-center p-6">
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold">Welcome</h1>
+    <p class="text-sm opacity-60 mt-2">IDとパスワードを入力してください</p>
+  </div>
+
+  <form
+    action="/login"
+    method="POST"
+    class="bg-white p-8 rounded-[2rem] shadow-sm space-y-6"
+  >
+    <div>
+      <label class="block text-xs font-bold mb-2 ml-1 uppercase tracking-widest"
+        >ID (6 digits)</label
+      >
+      <input
+        type="text"
+        name="id"
+        class="input-field"
+        placeholder="000000"
+        required
+      />
+    </div>
+    <div>
+      <label class="block text-xs font-bold mb-2 ml-1 uppercase tracking-widest"
+        >Password</label
+      >
+      <input type="password" name="password" class="input-field" required />
+    </div>
+    <button type="submit" class="w-full btn-primary shadow-lg">Login</button>
+  </form>
+
+  <div class="mt-8 text-center">
+    <p class="text-sm">初めての方はこちら</p>
+    <a
+      href="/register"
+      class="text-[#8B7E6D] font-bold border-b-2 border-[#8B7E6D] mt-2 inline-block"
+      >新規プロフィール登録</a
+    >
+  </div>
+</div>
+{% endblock %}

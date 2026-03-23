@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% block content %}
+<div class="flex-grow flex flex-col justify-center p-8 text-center">
+  <div
+    class="mb-6 inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mx-auto"
+  >
+    <svg
+      class="w-10 h-10 text-green-600"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="3"
+        d="M5 13l4 4L19 7"
+      ></path>
+    </svg>
+  </div>
+  <h1 class="text-2xl font-bold mb-4">
+    {% if is_edit %}更新が完了しました{% else %}投稿が完了しました{% endif %}
+  </h1>
+  <p class="text-[#8B7E6D] leading-relaxed mb-8">
+    IDとパスワードは、後ほどプロフィールを修正する際に必要となります。忘れないように控えておいてください。
+  </p>
+  <a href="/" class="btn-primary inline-block w-full shadow-md">ホームに戻る</a>
+</div>
+{% endblock %}

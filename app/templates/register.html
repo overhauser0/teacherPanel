@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-6">
+    <div class="flex items-center gap-4 mb-8">
+        <a href="/" class="p-2 bg-white rounded-full shadow-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </a>
+        <h1 class="text-xl font-bold">プロフィール設定</h1>
+    </div>
+
+    <form action="{{ '/edit/' + teacher.uuid if teacher else '/register' }}" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-[2rem] shadow-sm space-y-6">
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-bold mb-2 ml-1">指定ID</label>
+                <input type="text" name="id" value="{{ teacher.display_id if teacher }}" class="input-field" placeholder="012345" {{ 'readonly' if teacher and session.role != 'admin' }}>
+            </div>
+            <div>
+                <label class="block text-xs font-bold mb-2 ml-1">パスワード</label>
+                <input type="password" name="password" value="{{ teacher.password if teacher }}" class="input-field" required>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold mb-3 ml-1">性別</label>
+            <div class="flex gap-4">
+                <label class="flex-1">
+                    <input type="radio" name="gender" value="male" class="sr-only peer" {{ 'checked' if not teacher or teacher.gender == 'male' }}>
+                    <div class="text-center py-3 rounded-xl border-2 border-gray-100 peer-checked:border-blue-400 peer-checked:bg-blue-50 transition cursor-pointer">男性</div>
+                </label>
+                <label class="flex-1">
+                    <input type="radio" name="gender" value="female" class="sr-only peer" {{ 'checked' if teacher and teacher.gender == 'female' }}>
+                    <div class="text-center py-3 rounded-xl border-2 border-gray-100 peer-checked:border-rose-400 peer-checked:bg-rose-50 transition cursor-pointer">女性</div>
+                </label>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold mb-2 ml-1">氏名</label>
+            <input type="text" name="name" value="{{ teacher.name if teacher }}" class="input-field" placeholder="山田 太郎" required>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold mb-2 ml-1">教室</label>
+            <select name="classroom" class="input-field appearance-none bg-transparent">
+                {% for c in classrooms %}
+                <option value="{{ c }}" {{ 'selected' if teacher and teacher.classroom == c }}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-bold mb-2 ml-1">出身県</label>
+                <input type="text" name="hometown" value="{{ teacher.hometown if teacher }}" class="input-field" placeholder="広島県">
+            </div>
+            <div>
+                <label class="block text-xs font-bold mb-2 ml-1">得意科目</label>
+                <input type="text" name="subject" value="{{ teacher.subject if teacher }}" class="input-field" placeholder="数学・理科">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold mb-2 ml-1">プロフィール写真</label>
+            <input type="file" name="image" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-[#EDE4D8] file:text-[#5D5245]">
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold mb-2 ml-1">ひと言 (最大200文字)</label>
+            <textarea name="comment" rows="5" maxlength="200" 
+                    class="input-field" 
+                    placeholder="改行もそのまま反映されます">{{ teacher.comment if teacher }}</textarea>
+        </div>
+
+        <button type="submit" class="w-full btn-primary shadow-lg mt-4">内容を保存する</button>
+    </form>
+</div>
+{% endblock %}

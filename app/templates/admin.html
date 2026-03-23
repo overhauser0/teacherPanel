@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>管理者画面 - 講師管理</title>
+</head>
+<body class="bg-[#F9F6F2] p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        
+        <div class="flex justify-between items-end mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-[#5D5245] flex items-center gap-2">講師データ一覧</h1>
+                <p class="text-xs text-gray-400 mt-1">最終更新日時が新しい順に表示されています</p>
+            </div>
+            <a href="/" class="text-sm text-gray-400 hover:text-gray-600 underline">ログアウト</a>
+        </div>
+
+        <div class="mb-6 flex flex-wrap gap-4 items-center bg-white p-4 rounded-2xl shadow-sm border border-[#EDE4D8]">
+            <div class="flex items-center gap-2">
+                <label class="text-xs font-bold text-gray-500 uppercase">Classroom:</label>
+                <select onchange="location.href='?classroom=' + this.value + '&sort={{ current_sort }}&order={{ current_order }}'" 
+                        class="bg-[#F3F0EC] border-none rounded-lg text-sm p-2 outline-none focus:ring-2 focus:ring-[#8B7E6D]">
+                    <option value="">すべて表示</option>
+                    {% for c in classrooms %}
+                    <option value="{{ c }}" {{ 'selected' if current_filter == c }}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="h-4 w-px bg-gray-200 mx-2"></div>
+
+            <div class="flex items-center gap-2">
+                <label class="text-xs font-bold text-gray-500 uppercase">Sort by:</label>
+                <div class="flex bg-[#F3F0EC] rounded-lg p-1">
+                    <a href="?classroom={{ current_filter }}&sort=updated_at&order=desc" 
+                       class="px-3 py-1 text-xs rounded-md {{ 'bg-white shadow-sm font-bold' if current_sort == 'updated_at' }}">更新順</a>
+                    <a href="?classroom={{ current_filter }}&sort=name&order=asc" 
+                       class="px-3 py-1 text-xs rounded-md {{ 'bg-white shadow-sm font-bold' if current_sort == 'name' }}">名前順</a>
+                    <a href="?classroom={{ current_filter }}&sort=display_id&order=asc" 
+                       class="px-3 py-1 text-xs rounded-md {{ 'bg-white shadow-sm font-bold' if current_sort == 'display_id' }}">ID順</a>
+                </div>
+            </div>
+        </div>
+
+        <form id="adminForm" method="POST">
+            <div class="bg-white rounded-[2rem] shadow-sm border border-[#EDE4D8] overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-[#EDE4D8] text-[#5D5245] text-xs uppercase tracking-wider">
+                            <tr>
+                                <th class="p-5 w-16 text-center">選択</th>
+                                <th class="p-5">ID</th>
+                                <th class="p-5">氏名 / 科目</th>
+                                <th class="p-5">教室</th>
+                                <th class="p-5">最終更新日時</th>
+                                <th class="p-5 text-center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for t in teachers %}
+                            <tr class="hover:bg-orange-50 transition-colors">
+                                <td class="p-5 text-center">
+                                    <input type="checkbox" name="selected_teachers" value="{{ t.uuid }}" 
+                                           class="w-5 h-5 rounded border-gray-300 text-[#8B7E6D]">
+                                </td>
+                                <td class="p-5 font-mono text-sm text-gray-500">{{ t.display_id }}</td>
+                                <td class="p-5">
+                                    <div class="font-bold text-[#5D5245]">{{ t.name }}</div>
+                                    <div class="text-xs text-gray-400">{{ t.subject }}</div>
+                                </td>
+                                <td class="p-5">
+                                    <span class="px-3 py-1 bg-gray-100 rounded-full text-[10px] font-bold text-gray-500">{{ t.classroom }}</span>
+                                </td>
+                                <td class="p-5 text-xs text-gray-400">
+                                    {{ t.updated_at.strftime('%Y/%m/%d %H:%M') if t.updated_at }}
+                                </td>
+                                <td class="p-5 text-center">
+                                    <div class="flex items-center justify-center gap-4">
+                                        <a href="/edit/{{ t.uuid }}" class="text-[#8B7E6D] hover:underline font-bold text-sm">編集</a>
+                                        <button type="button" onclick="confirmDelete('{{ t.uuid }}', '{{ t.name }}')" 
+                                                class="text-red-300 hover:text-red-500 text-xs transition underline">削除</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="6" class="p-10 text-center text-gray-400 italic">該当する講師が見つかりませんでした。</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-6 bg-[#FDFCFB] border-t border-[#EDE4D8] flex justify-between items-center">
+                    <p class="text-[10px] text-gray-400 italic">※チェックを入れた講師をまとめて別タブで表示します</p>
+                    <button type="button" onclick="submitPrint()" 
+                            class="bg-[#8B7E6D] text-white px-10 py-3 rounded-xl font-bold shadow-md hover:bg-[#7A6D5C] transition flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                        選択した講師を印刷
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('adminForm');
+        function submitPrint() {
+            const checkboxes = document.querySelectorAll('input[name="selected_teachers"]:checked');
+            if (checkboxes.length === 0) { alert('印刷する講師を選択してください。'); return; }
+            form.action = '/print';
+            form.target = '_blank';
+            form.submit();
+        }
+        function confirmDelete(uuid, name) {
+            if (confirm(`「${name} 先生」のアカウントとデータを完全に削除しますか？\n（パスワード再発行は行わず削除対応となります）`)) {
+                form.action = '/delete/' + uuid;
+                form.target = '_self';
+                form.submit();
+            }
+        }
+    </script>
+</body>
+</html>

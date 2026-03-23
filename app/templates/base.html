@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>講師紹介カード管理</title>
+    <style>
+      body {
+        background-color: #f9f6f2;
+        color: #5d5245;
+        font-family: 'sans-serif';
+      }
+      .btn-primary {
+        background-color: #8b7e6d;
+        color: white;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: bold;
+        transition: all 0.2s;
+      }
+      .btn-primary:hover {
+        background-color: #7a6d5c;
+        transform: translateY(-1px);
+      }
+      .input-field {
+        background-color: #f3f0ec;
+        border: none;
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+        width: 100%;
+        outline: none;
+      }
+      .input-field:focus {
+        ring: 2px;
+        ring-color: #8b7e6d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="max-w-md mx-auto min-h-screen flex flex-col">
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
