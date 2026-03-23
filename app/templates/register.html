@@ -5,13 +5,13 @@
         <a href="/" class="p-2 bg-white rounded-full shadow-sm">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </a>
-        <h1 class="text-xl font-bold">プロフィール設定</h1>
+        <h1 class="text-xl font-bold">講師カード設定</h1>
     </div>
 
     <form action="{{ '/edit/' + teacher.uuid if teacher else '/register' }}" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-[2rem] shadow-sm space-y-6">
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-xs font-bold mb-2 ml-1">指定ID</label>
+                <label class="block text-xs font-bold mb-2 ml-1">講師番号（6桁）</label>
                 <input type="text" name="id" value="{{ teacher.display_id if teacher }}" class="input-field" placeholder="012345" {{ 'readonly' if teacher and session.role != 'admin' }}>
             </div>
             <div>

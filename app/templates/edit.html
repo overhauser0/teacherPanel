@@ -5,7 +5,7 @@
         <a href="{{ url_for('admin') if session.role == 'admin' else '/' }}" class="p-2 bg-white rounded-full shadow-sm text-[#8B7E6D]">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </a>
-        <h1 class="text-xl font-bold">プロフィール編集</h1>
+        <h1 class="text-xl font-bold">講師カード編集</h1>
     </div>
 
     <script>
@@ -42,7 +42,7 @@
 
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-xs font-bold mb-2 ml-1 text-gray-400">指定ID (修正不可)</label>
+                <label class="block text-xs font-bold mb-2 ml-1 text-gray-400">講師番号 (修正不可)</label>
                 <input type="text" name="id" value="{{ teacher.display_id }}" class="input-field text-gray-400 font-mono" readonly>
             </div>
             <div>

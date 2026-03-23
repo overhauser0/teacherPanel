@@ -112,21 +112,38 @@ def edit(teacher_uuid):
     teacher = Teacher.query.get_or_404(teacher_uuid)
     
     if request.method == 'POST':
+        # --- ここから：各項目の更新処理を追加 ---
+        # フォームから送られてきた内容を teacher オブジェクトに代入します
+        teacher.name = request.form.get('name')
+        teacher.password = request.form.get('password')
+        teacher.gender = request.form.get('gender')
+        teacher.hometown = request.form.get('hometown')
+        teacher.subject = request.form.get('subject')
+        teacher.classroom = request.form.get('classroom')
+        teacher.comment = request.form.get('comment')
+        
+        # 管理者の場合のみ、表示用IDの変更を許可する場合（必要なければ不要です）
+        if session.get('role') == 'admin':
+            teacher.display_id = request.form.get('id')
+        # --- ここまで ---
+
+        # 画像の処理
         file = request.files.get('image')
         if file and file.filename != '':
             ext = os.path.splitext(file.filename)[1]
-            # この人のUUID（teacher_uuid）をファイル名にする
             filename = f"{teacher_uuid}{ext}"
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
             teacher.image_filename = filename
             
+        # 最後に一括してコミット（保存）
         db.session.commit()
-        # adminなら一覧へ、講師ならトップ（ログアウト状態）へ
+
+        # リダイレクト処理
         if session.get('role') == 'admin':
             return redirect(url_for('admin'))
         else:
-            session.clear() # 編集後はセキュリティのためログアウト
+            session.clear() 
             return render_template('complete.html', is_edit=True)
             
     return render_template('edit.html', teacher=teacher, classrooms=CLASSROOMS)

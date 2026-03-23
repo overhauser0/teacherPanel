@@ -1,8 +1,10 @@
 {% extends "base.html" %} {% block content %}
 <div class="flex-grow flex flex-col justify-center p-6">
   <div class="text-center mb-8">
-    <h1 class="text-3xl font-bold">Welcome</h1>
-    <p class="text-sm opacity-60 mt-2">IDとパスワードを入力してください</p>
+    <h1 class="text-3xl font-bold">１対１ネッツ講師カード登録</h1>
+    <p class="text-sm opacity-60 mt-2">
+      一番下の新規登録より投稿してください。一度投稿したものを編集する場合はログインをしましょう。
+    </p>
   </div>
 
   <form
@@ -12,7 +14,7 @@
   >
     <div>
       <label class="block text-xs font-bold mb-2 ml-1 uppercase tracking-widest"
-        >ID (6 digits)</label
+        >講師番号</label
       >
       <input
         type="text"
@@ -36,7 +38,7 @@
     <a
       href="/register"
       class="text-[#8B7E6D] font-bold border-b-2 border-[#8B7E6D] mt-2 inline-block"
-      >新規プロフィール登録</a
+      >新規登録</a
     >
   </div>
 </div>
