@@ -4,12 +4,13 @@ FROM python:3.11-slim
 # コンテナ内の作業ディレクトリを設定
 WORKDIR /app
 
-# 必要なライブラリをインストール
-# pytz: 日本時間の管理用
-# flask-sqlalchemy: データベース操作用
-RUN pip install --no-cache-dir flask flask-sqlalchemy pytz
+# 1. まず requirements.txt だけをコピー（ビルド高速化のため）
+COPY ./requirements.txt /app/requirements.txt
 
-# アプリケーションファイルをコピー
+# 2. まとめてインストール
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 3. アプリケーションファイルをコピー
 COPY ./app /app
 
 # 実行

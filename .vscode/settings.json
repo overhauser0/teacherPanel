@@ -1,0 +1,19 @@
+{
+  "files.associations": {
+    "**/*.html": "jinja-html"
+  },
+  "[jinja-html]": {
+    "editor.defaultFormatter": "monosans.djlint",
+    "editor.formatOnSave": true,
+    "editor.suggestSelection": "first",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": true,
+      "strings": true
+    }
+  },
+  "djlint.formatJs": true,
+  "djlint.formatCss": true,
+  "djlint.formatAttributeTemplateTags": true,
+  "djlint.indentJs": 0
+}

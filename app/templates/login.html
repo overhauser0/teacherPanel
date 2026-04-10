@@ -1,9 +1,9 @@
 {% extends "base.html" %} {% block content %}
 <div class="flex-grow flex flex-col justify-center p-6">
   <div class="text-center mb-8">
-    <h1 class="text-3xl font-bold">１対１ネッツ講師カード登録</h1>
+    <h1 class="text-3xl font-bold">講師カード登録</h1>
     <p class="text-sm opacity-60 mt-2">
-      一番下の新規登録より投稿してください。一度投稿したものを編集する場合はログインをしましょう。
+      一番下の新規登録より投稿してください。<br />一度投稿したものを編集する場合は、登録したパスワードでログインしてください。
     </p>
   </div>
 
@@ -40,6 +40,22 @@
       class="text-[#8B7E6D] font-bold border-b-2 border-[#8B7E6D] mt-2 inline-block"
       >新規登録</a
     >
+  </div>
+</div>
+<div class="mt-12 flex flex-col items-center opacity-80">
+  <img
+    src="{{ url_for('static', filename='logo.png') }}"
+    alt="Logo"
+    class="h-10 w-auto object-contain mb-4 shadow-sm"
+  />
+
+  <div class="text-center space-y-1">
+    <p class="text-xs font-bold text-[#5D5245] tracking-wider">
+      対話式進学塾１対１ネッツ 広島地区
+    </p>
+    <p class="text-[10px] text-gray-400 font-mono">
+      &copy; 2026 1to1 NETZ Hiroshima. All rights reserved.
+    </p>
   </div>
 </div>
 {% endblock %}

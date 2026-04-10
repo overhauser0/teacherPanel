@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import pytz
+import requests
 
 app = Flask(__name__)
 app.secret_key = "juku_secret_key" # 適宜変更
@@ -41,6 +42,49 @@ class Teacher(db.Model):
 with app.app_context():
     db.create_all()
 
+# --- 共通処理ヘルパー ---
+
+def save_teacher_images(teacher_uuid, file):
+    """画像ファイルをUUID名で保存し、ファイル名を返す"""
+    if file and file.filename != '':
+        ext = os.path.splitext(file.filename)[1]
+        filename = f"{teacher_uuid}{ext}"
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        return filename
+    return None
+
+def send_n8n_notification_old(teacher, is_new=True):
+    """n8nへ通知を飛ばす"""
+    try:
+        target_url = "http://192.168.13.71:5678/webhook/toSlack"
+        action = "登録" if is_new else "更新"
+        payload = {
+            "title": f"【TeacherPanel】講師情報が{action}されました",
+            "body": f"{teacher.classroom}：{teacher.name}先生の情報が{action}されました。",
+        }
+        requests.post(target_url, json=payload, timeout=3.0)
+    except Exception as e:
+        print(f"Notification failed: {e}")
+
+def send_n8n_notification(teacher, is_new=True):
+    # 関数の入り口。flush=True で強制的にログへ出力
+    print(f"DEBUG: Notification process started for {teacher.name}", flush=True)
+    
+    try:
+        target_url = "https://n8n.overhauser0.synology.me/webhook/toSlack"
+        action = "登録" if is_new else "更新"
+        payload = {
+            "title": f"【TeacherPanel】講師情報が{action}されました",
+            "body": f"{teacher.classroom}：{teacher.name}先生の情報が{action}されました。",
+        }
+        # verify=False は、SSL証明書エラーが出る場合の回避策（まずはこれで試すのが吉）
+        response = requests.post(target_url, json=payload, timeout=5.0, verify=False)
+        
+        print(f"DEBUG: n8n response status: {response.status_code}", flush=True)
+    except Exception as e:
+        print(f"DEBUG: Notification ERROR: {e}", flush=True)
+
 # --- ルーティング ---
 
 @app.route('/')
@@ -65,18 +109,16 @@ def login():
     return "認証に失敗しました。IDまたはPWを確認してください。", 403
 
 @app.route('/register', methods=['GET', 'POST'])
-
-@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        uid = request.form.get('id')
-        
+        # 新規作成
+     
         # 1. 最初に「この人のための専用ID」を生成する
         teacher_uuid = str(uuid.uuid4())
         
         new_teacher = Teacher(
-            uuid=teacher_uuid, # 生成したIDを明示的に入れる
-            display_id=uid,
+            uuid=teacher_uuid,
+            display_id=request.form.get('id'),
             password=request.form.get('password'),
             gender=request.form.get('gender'),
             name=request.form.get('name'),
@@ -87,21 +129,20 @@ def register():
         )
         
         # 2. 画像の処理
-        file = request.files.get('image')
-        if file and file.filename != '':
-            ext = os.path.splitext(file.filename)[1]
-            # 2. 生成したIDをファイル名にする
-            filename = f"{teacher_uuid}{ext}"
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
-            new_teacher.image_filename = filename
+        img_name = save_teacher_images(teacher_uuid, request.files.get('image'))
+        if img_name:
+            new_teacher.image_filename = img_name
             
         # 3. データベースに保存
         db.session.add(new_teacher)
         db.session.commit()
-        
-        # 4. 完了画面を表示
+
+        # 4. 外部へPOST通信を飛ばす
+        send_n8n_notification(new_teacher, is_new=True)
+
+        # 5. 完了画面を表示
         return render_template('complete.html', is_edit=False)
+    
     return render_template('register.html', classrooms=CLASSROOMS)
     
 @app.route('/edit/<teacher_uuid>', methods=['GET', 'POST'])
@@ -112,8 +153,7 @@ def edit(teacher_uuid):
     teacher = Teacher.query.get_or_404(teacher_uuid)
     
     if request.method == 'POST':
-        # --- ここから：各項目の更新処理を追加 ---
-        # フォームから送られてきた内容を teacher オブジェクトに代入します
+        # 既存データの更新
         teacher.name = request.form.get('name')
         teacher.password = request.form.get('password')
         teacher.gender = request.form.get('gender')
@@ -122,22 +162,20 @@ def edit(teacher_uuid):
         teacher.classroom = request.form.get('classroom')
         teacher.comment = request.form.get('comment')
         
-        # 管理者の場合のみ、表示用IDの変更を許可する場合（必要なければ不要です）
+        # 管理者の場合のみ、表示用IDの変更を許可する
         if session.get('role') == 'admin':
             teacher.display_id = request.form.get('id')
-        # --- ここまで ---
 
         # 画像の処理
-        file = request.files.get('image')
-        if file and file.filename != '':
-            ext = os.path.splitext(file.filename)[1]
-            filename = f"{teacher_uuid}{ext}"
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
-            teacher.image_filename = filename
+        img_name = save_teacher_images(teacher.uuid, request.files.get('image'))
+        if img_name:
+            teacher.image_filename = img_name
             
         # 最後に一括してコミット（保存）
         db.session.commit()
+
+        # 通知の送信
+        send_n8n_notification(teacher, is_new=False)
 
         # リダイレクト処理
         if session.get('role') == 'admin':
@@ -145,7 +183,7 @@ def edit(teacher_uuid):
         else:
             session.clear() 
             return render_template('complete.html', is_edit=True)
-            
+        
     return render_template('edit.html', teacher=teacher, classrooms=CLASSROOMS)
 
 # 削除機能の追加
@@ -210,4 +248,4 @@ def print_cards():
     return render_template('print.html', teachers=teachers)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)

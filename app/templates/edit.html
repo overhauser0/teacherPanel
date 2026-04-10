@@ -96,11 +96,43 @@
         </div>
 
         <div>
-            <label class="block text-xs font-bold mb-2 ml-1">ひと言 (最大200文字)</label>
-            <textarea name="comment" rows="5" maxlength="200" class="input-field">{{ teacher.comment }}</textarea>
+            <div class="flex justify-between items-end mb-2 ml-1">
+                <label class="text-xs font-bold">ひと言 (最大180文字)</label>
+                <span id="char-count-wrapper" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                    <span id="char-count">0</span> / 180
+                </span>
+            </div>
+            
+            <textarea name="comment" id="comment-textarea" rows="5" maxlength="180" 
+                    oninput="updateCharCount()"
+                    class="input-field" 
+                    placeholder="改行もそのまま反映されます">{{ teacher.comment if teacher }}</textarea>
         </div>
 
         <button type="submit" class="w-full btn-primary shadow-lg mt-4">内容を保存する</button>
     </form>
 </div>
+<script>
+    function updateCharCount() {
+        const textarea = document.getElementById('comment-textarea');
+        const countDisplay = document.getElementById('char-count');
+        const wrapper = document.getElementById('char-count-wrapper');
+        const currentLength = textarea.value.length;
+
+        // 数値を更新
+        countDisplay.innerText = currentLength;
+
+        // 180文字に達したら赤くする（念のためmaxlengthがあるので超えませんが、警告色として）
+        if (currentLength >= 180) {
+            wrapper.classList.remove('text-gray-400');
+            wrapper.classList.add('text-red-500');
+        } else {
+            wrapper.classList.remove('text-red-500');
+            wrapper.classList.add('text-gray-400');
+        }
+    }
+
+    // ページ読み込み時に初期カウントを表示（編集画面用）
+    window.onload = updateCharCount;
+</script>
 {% endblock %}

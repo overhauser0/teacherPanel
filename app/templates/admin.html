@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>管理者画面 - 講師管理</title>
+    <title>講師紹介カード - 講師管理</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
 </head>
 <body class="bg-[#F9F6F2] p-4 md:p-8">
     <div class="max-w-6xl mx-auto">
@@ -24,7 +25,7 @@
                         class="bg-[#F3F0EC] border-none rounded-lg text-sm p-2 outline-none focus:ring-2 focus:ring-[#8B7E6D]">
                     <option value="">すべて表示</option>
                     {% for c in classrooms %}
-                    <option value="{{ c }}" {{ 'selected' if current_filter == c }}>{{ c }}</option>
+                    <option value="{{ c }}" {% if current_filter == c %}selected{% endif %}>{{ c }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -46,57 +47,58 @@
 
         <form id="adminForm" method="POST">
             <div class="bg-white rounded-[2rem] shadow-sm border border-[#EDE4D8] overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead class="bg-[#EDE4D8] text-[#5D5245] text-xs uppercase tracking-wider">
-                            <tr>
-                                <th class="p-5 w-16 text-center">選択</th>
-                                <th class="p-5">ID</th>
-                                <th class="p-5">氏名 / 科目</th>
-                                <th class="p-5">教室</th>
-                                <th class="p-5">最終更新日時</th>
-                                <th class="p-5 text-center">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            {% for t in teachers %}
-                            <tr class="hover:bg-orange-50 transition-colors">
-                                <td class="p-5 text-center">
-                                    <input type="checkbox" name="selected_teachers" value="{{ t.uuid }}" 
-                                           class="w-5 h-5 rounded border-gray-300 text-[#8B7E6D]">
-                                </td>
-                                <td class="p-5 font-mono text-sm text-gray-500">{{ t.display_id }}</td>
-                                <td class="p-5">
-                                    <div class="font-bold text-[#5D5245]">{{ t.name }}</div>
-                                    <div class="text-xs text-gray-400">{{ t.subject }}</div>
-                                </td>
-                                <td class="p-5">
-                                    <span class="px-3 py-1 bg-gray-100 rounded-full text-[10px] font-bold text-gray-500">{{ t.classroom }}</span>
-                                </td>
-                                <td class="p-5 text-xs text-gray-400">
-                                    {{ t.updated_at.strftime('%Y/%m/%d %H:%M') if t.updated_at }}
-                                </td>
-                                <td class="p-5 text-center">
-                                    <div class="flex items-center justify-center gap-4">
-                                        <a href="/edit/{{ t.uuid }}" class="text-[#8B7E6D] hover:underline font-bold text-sm">編集</a>
-                                        <button type="button" onclick="confirmDelete('{{ t.uuid }}', '{{ t.name }}')" 
-                                                class="text-red-300 hover:text-red-500 text-xs transition underline">削除</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% else %}
-                            <tr><td colspan="6" class="p-10 text-center text-gray-400 italic">該当する講師が見つかりませんでした。</td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-max"> <thead class="bg-[#EDE4D8] text-[#5D5245] text-xs uppercase tracking-wider">
+                        <tr>
+                            <th class="p-5 w-16 text-center whitespace-nowrap">選択</th>
+                            <th class="p-5 whitespace-nowrap">ID</th>
+                            <th class="p-5 whitespace-nowrap">氏名</th>
+                            <th class="p-5 whitespace-nowrap">教室</th>
+                            <th class="p-5 whitespace-nowrap">最終更新日時</th>
+                            <th class="p-5 text-center whitespace-nowrap">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for t in teachers %}
+                        <tr class="hover:bg-orange-50 transition-colors">
+                            <td class="p-5 text-center whitespace-nowrap">
+                                <input type="checkbox" name="selected_teachers" value="{{ t.uuid }}" 
+                                    class="w-5 h-5 rounded border-gray-300 text-[#8B7E6D]">
+                            </td>
+                            <td class="p-5 font-mono text-sm text-gray-500 whitespace-nowrap">{{ t.display_id }}</td>
+                            <td class="p-5 whitespace-nowrap">
+                                <div class="font-bold text-[#5D5245]">{{ t.name }}</div>
+                            </td>
+                            <td class="p-5 whitespace-nowrap">
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-[10px] font-bold text-gray-500">{{ t.classroom }}</span>
+                            </td>
+                            <td class="p-5 text-xs text-gray-400 whitespace-nowrap">
+                                {{ t.updated_at.strftime('%Y/%m/%d %H:%M') if t.updated_at else '-' }}
+                            </td>
+                            <td class="p-5 text-center whitespace-nowrap">
+                                <div class="flex items-center justify-center gap-4">
+                                    <a href="/edit/{{ t.uuid }}" class="text-[#8B7E6D] hover:underline font-bold text-sm">編集</a>
+                                    <button type="button" onclick="confirmDelete('{{ t.uuid }}', '{{ t.name }}')" 
+                                            class="text-red-300 hover:text-red-500 text-xs transition underline">削除</button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
                 <div class="p-6 bg-[#FDFCFB] border-t border-[#EDE4D8] flex justify-between items-center">
-                    <p class="text-[10px] text-gray-400 italic">※チェックを入れた講師をまとめて別タブで表示します</p>
                     <button type="button" onclick="submitPrint()" 
                             class="bg-[#8B7E6D] text-white px-10 py-3 rounded-xl font-bold shadow-md hover:bg-[#7A6D5C] transition flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                         選択した講師を印刷
+                    </button>
+                    <button type="button" onclick="downloadCSV()" class="flex items-center gap-2 border-2 border-[#8B7E6D] text-[#8B7E6D] px-6 py-2 rounded-full font-bold hover:bg-orange-50 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        CSV出力
                     </button>
                 </div>
             </div>
@@ -119,6 +121,47 @@
                 form.submit();
             }
         }
+        function downloadCSV() {
+        // 1. テーブルを取得（今表示されている行のみを対象にする）
+        const table = document.querySelector("table");
+        const rows = Array.from(table.querySelectorAll("tr"));
+        
+        let csvContent = [];
+
+        // 2. ヘッダーとデータ行をループ
+        rows.forEach((row, index) => {
+            const cols = Array.from(row.querySelectorAll("th, td"));
+            
+            // CSVに含める列を選択（0番目の「選択」と、最後の「操作」は除外）
+            const data = cols.slice(1, -1).map(col => {
+                // セル内のテキストを取得し、改行や余分な空白を削除
+                let text = col.innerText.replace(/\n/g, " ").trim();
+                // カンマを含む場合に備えてダブルクォーテーションで囲む
+                return `"${text}"`;
+            });
+
+            // 空の行でなければ追加
+            if (data.length > 0) {
+                csvContent.push(data.join(","));
+            }
+        });
+
+        // 3. BOM（Excelでの文字化け防止用）を付けてBlobを作成
+        const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+        const blob = new Blob([bom, csvContent.join("\n")], { type: "text/csv;charset=utf-8;" });
+        
+        // 4. ダウンロードリンクを生成してクリック
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 16);
+        
+        link.setAttribute("href", url);
+        link.setAttribute("download", `teacher_list_${timestamp}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
     </script>
 </body>
 </html>

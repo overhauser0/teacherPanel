@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <title>講師紹介カード - 印刷</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='favicon.png') }}"
+    />
     <style>
       @media print {
         @page {
@@ -48,30 +54,42 @@
 
     {% for t in teachers %}
     <div class="print-canvas mx-auto color-{{ t.gender }}">
-      <div class="w-[40%] flex flex-col">
-        <div
-          class="w-full aspect-square rounded-[32px] overflow-hidden bg-gray-100"
-        >
-          {% if t.image_filename %}
-          <img
-            src="{{ url_for('static', filename='uploads/' + t.image_filename) }}"
-            class="w-full h-full object-cover"
-          />
-          {% else %}
+      <div class="w-[40%] flex flex-col justify-between h-[170mm]">
+        <div>
           <div
-            class="w-full h-full flex items-center justify-center text-gray-300 italic"
+            class="w-full aspect-square rounded-[32px] overflow-hidden bg-gray-100"
           >
-            No Photo
+            {% if t.image_filename %}
+            <img
+              src="{{ url_for('static', filename='uploads/' + t.image_filename) }}"
+              class="w-full h-full object-cover"
+            />
+            {% endif %}
           </div>
-          {% endif %}
+          <div class="mt-8 text-3xl font-bold font-sans" style="color:var(--accent);opacity:0.6">Name</div>
+          <div class="mt-2 relative">
+            <h1 class="text-6xl font-black text-gray-800 tracking-tight text-center">
+              {{ t.name }}
+            </h1>
+            <div class="absolute -bottom-4 left-0 w-full h-4 overflow-hidden">
+              <svg
+                viewBox="0 0 100 20"
+                preserveAspectRatio="none"
+                class="w-full h-full"
+                style="
+                  stroke: var(--accent);
+                  stroke-width: 4;
+                  fill: none;
+                  opacity: 0.6;
+                "
+              >
+                <path d="M0 10 Q 12.5 0, 25 10 T 50 10 T 75 10 T 100 10" />
+              </svg>
+            </div>
+          </div>
         </div>
-        <div class="mt-8">
-          <h1 class="text-6xl font-black text-gray-800 tracking-tight">
-            {{ t.name }}
-            <span class="text-2xl font-normal text-gray-400">先生</span>
-          </h1>
-        </div>
-        <div class="mt-6 h-16 w-48">
+
+        <div class="h-24 w-72 flex items-end">
           <img
             src="/static/logo.png"
             class="max-w-full max-h-full object-contain object-left"
@@ -79,39 +97,40 @@
         </div>
       </div>
 
-      <div class="w-[60%] flex flex-col pt-4">
-        <div class="mb-10 space-y-4">
+      <div class="w-[60%] flex flex-col justify-between h-[170mm] pt-4">
+        <div class="mb-5 space-y-2">
+          <div class="text-3xl font-bold font-sans" style="color:var(--accent);opacity:0.6">Profile</div>
           <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
             <span
               class="text-xs font-bold tracking-widest text-gray-400 uppercase w-20"
-              >Hometown</span
+              >出身県</span
             >
             <p class="text-3xl font-bold text-gray-700">{{ t.hometown }}</p>
           </div>
           <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
             <span
               class="text-xs font-bold tracking-widest text-gray-400 uppercase w-20"
-              >Subject</span
+              >得意科目</span
             >
             <p class="text-3xl font-bold text-gray-700">{{ t.subject }}</p>
           </div>
         </div>
 
         <div
-          class="relative p-10 rounded-[40px] min-h-[220px]"
+          class="relative p-10 rounded-[40px] min-h-[220px] flex-grow"
           style="background-color: var(--accent-light)"
         >
           <svg
-            class="absolute top-6 left-6 w-12 h-12 opacity-10"
-            style="fill: var(--accent)"
+            class="absolute top-6 left-6 w-14 h-14"
+            style="fill: {{ '#cbd5e1' if t.gender == 'male' else '#ffb5be' }};"
             viewBox="0 0 24 24"
           >
             <path
-              d="M14.017 21L14.017 18C14.017 16.899 14.899 16 16.017 16H19.017C19.567 16 20.017 15.55 20.017 15V9C20.017 8.45 19.567 8 19.017 8H15.017C14.467 8 14.017 8.45 14.017 9V11C14.017 11.55 13.567 12 13.017 12H12.017V5H22.017V15C22.017 18.314 19.331 21 16.017 21H14.017ZM3.017 21L3.017 18C3.017 16.899 3.899 16 5.017 16H8.017C8.567 16 9.017 15.55 9.017 15V9C9.017 8.45 8.567 8 8.017 8H4.017C3.467 8 3.017 8.45 3.017 9V11C3.017 11.55 2.567 12 2.017 12H1.017V5H11.017V15C11.017 18.314 8.331 21 5.017 21H3.017Z"
+              d="M14.017 21L14.017 18C14.017 16.895 14.912 16 16.017 16H19.017C20.122 16 21.017 16.895 21.017 18V21H14.017ZM3.017 21V18C3.017 16.895 3.912 16 5.017 16H8.017C9.122 16 10.016 16.895 10.016 18V21H3.017ZM14.017 14C14.017 11.131 15.222 8.628 17.152 6.883C17.657 6.425 18.448 6.46 18.906 6.965C19.364 7.47 19.329 8.261 18.824 8.719C17.51 9.904 16.817 11.455 16.712 13H19.017C20.122 13 21.017 13.895 21.017 15V18H14.017V14ZM3.017 14C3.017 11.131 4.222 8.628 6.152 6.883C6.657 6.425 7.448 6.46 7.896 6.965C8.354 7.47 8.319 8.261 7.814 8.719C6.5 9.904 5.807 11.455 5.702 13H8.017C9.122 13 10.016 13.895 10.016 15V18H3.017V14Z"
             />
           </svg>
           <p
-            class="text-2xl leading-relaxed text-gray-700 font-medium relative z-10 pt-4"
+            class="text-2xl leading-relaxed text-gray-700 font-light relative z-10"
             style="white-space: pre-wrap"
           >
             {{ t.comment }}
