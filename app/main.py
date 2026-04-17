@@ -54,19 +54,6 @@ def save_teacher_images(teacher_uuid, file):
         return filename
     return None
 
-def send_n8n_notification_old(teacher, is_new=True):
-    """n8nへ通知を飛ばす"""
-    try:
-        target_url = "http://192.168.13.71:5678/webhook/toSlack"
-        action = "登録" if is_new else "更新"
-        payload = {
-            "title": f"【TeacherPanel】講師情報が{action}されました",
-            "body": f"{teacher.classroom}：{teacher.name}先生の情報が{action}されました。",
-        }
-        requests.post(target_url, json=payload, timeout=3.0)
-    except Exception as e:
-        print(f"Notification failed: {e}")
-
 def send_n8n_notification(teacher, is_new=True):
     # 関数の入り口。flush=True で強制的にログへ出力
     print(f"DEBUG: Notification process started for {teacher.name}", flush=True)
@@ -77,6 +64,7 @@ def send_n8n_notification(teacher, is_new=True):
         payload = {
             "title": f"【TeacherPanel】講師情報が{action}されました",
             "body": f"{teacher.classroom}：{teacher.name}先生の情報が{action}されました。",
+            "url": "https://teacherpanel.overhauser0.synology.me"
         }
         # verify=False は、SSL証明書エラーが出る場合の回避策（まずはこれで試すのが吉）
         response = requests.post(target_url, json=payload, timeout=5.0, verify=False)
